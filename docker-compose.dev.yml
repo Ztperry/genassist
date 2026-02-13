@@ -143,7 +143,7 @@ services:
       - "app=genassist"
       - "service=qdrant"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://qdrant:6333/healthz"]
+      test: ["CMD-SHELL", "timeout 3 bash -lc 'exec 3<>/dev/tcp/127.0.0.1/6333'"]
       interval: 5s
       timeout: 5s
       retries: 5
