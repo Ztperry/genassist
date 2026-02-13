@@ -1,0 +1,10 @@
+{
+  "name": "genassist-dev-tools",
+  "private": true,
+  "scripts": {
+    "start": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/dev.ps1 start",
+    "rebuild": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/dev.ps1 rebuild",
+    "stop": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/dev.ps1 stop",
+    "status": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/dev.ps1 status"
+  }
+}

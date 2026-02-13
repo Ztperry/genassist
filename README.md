@@ -68,6 +68,16 @@ docker compose -f docker-compose.dev.yml -p genassist_dev up --build -d
 docker compose -f docker-compose.dev.yml -p genassist_dev down
 ```
 
+### Dev Shortcut Commands (npm)
+From the repository root:
+
+```bash
+npm start        # Start dev stack without rebuilding images
+npm run rebuild  # Rebuild app + whisper images, then start stack
+npm run status   # Show container status
+npm run stop     # Stop and remove the stack
+```
+
 ### Use container registry
 ```bash
 #RUN
