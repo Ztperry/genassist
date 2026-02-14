@@ -1,0 +1,235 @@
+services:
+  - type: keyvalue
+    name: genassist-redis
+    ipAllowList: []
+
+  - type: web
+    name: genassist-api
+    runtime: docker
+    autoDeploy: true
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/playground/health
+    envVars:
+      - key: WORKERS
+        value: "1"
+      - key: RELOAD
+        value: "false"
+      - key: USE_SSL
+        value: "false"
+      - key: FASTAPI_RUN_PORT
+        value: "8000"
+      - key: LOG_LEVEL
+        value: "INFO"
+      - key: MULTI_TENANT_ENABLED
+        value: "false"
+      - key: TENANT_SUBDOMAIN_ENABLED
+        value: "false"
+      - key: RATE_LIMIT_ENABLED
+        value: "true"
+      - key: RATE_LIMIT_STORAGE_BACKEND
+        value: "redis"
+      - key: REDIS_SSL
+        value: "false"
+      - key: FERNET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: DB_NAME
+        fromDatabase:
+          name: genassist-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: genassist-db
+          property: user
+      - key: DB_PASS
+        fromDatabase:
+          name: genassist-db
+          property: password
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_HOST
+        sync: false
+      - key: REDIS_OVERRIDE_URL
+        fromService:
+          type: keyvalue
+          name: genassist-redis
+          property: connectionString
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+
+  - type: worker
+    name: genassist-celery-worker
+    runtime: docker
+    plan: starter
+    autoDeploy: true
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: python /src/run_celery.py worker -l INFO
+    envVars:
+      - key: FERNET_KEY
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: FERNET_KEY
+      - key: JWT_SECRET_KEY
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: JWT_SECRET_KEY
+      - key: DB_NAME
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: DB_NAME
+      - key: DB_USER
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: DB_USER
+      - key: DB_PASS
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: DB_PASS
+      - key: DB_PORT
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: DB_PORT
+      - key: DB_HOST
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: DB_HOST
+      - key: REDIS_OVERRIDE_URL
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: REDIS_OVERRIDE_URL
+      - key: REDIS_SSL
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: REDIS_SSL
+      - key: MULTI_TENANT_ENABLED
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: MULTI_TENANT_ENABLED
+      - key: TENANT_SUBDOMAIN_ENABLED
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: TENANT_SUBDOMAIN_ENABLED
+      - key: LOG_LEVEL
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: LOG_LEVEL
+
+  - type: worker
+    name: genassist-celery-beat
+    runtime: docker
+    plan: starter
+    autoDeploy: true
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    dockerCommand: python /src/run_celery.py beat -l INFO
+    envVars:
+      - key: FERNET_KEY
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: FERNET_KEY
+      - key: JWT_SECRET_KEY
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: JWT_SECRET_KEY
+      - key: DB_NAME
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: DB_NAME
+      - key: DB_USER
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: DB_USER
+      - key: DB_PASS
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: DB_PASS
+      - key: DB_PORT
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: DB_PORT
+      - key: DB_HOST
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: DB_HOST
+      - key: REDIS_OVERRIDE_URL
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: REDIS_OVERRIDE_URL
+      - key: REDIS_SSL
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: REDIS_SSL
+      - key: MULTI_TENANT_ENABLED
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: MULTI_TENANT_ENABLED
+      - key: TENANT_SUBDOMAIN_ENABLED
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: TENANT_SUBDOMAIN_ENABLED
+      - key: LOG_LEVEL
+        fromService:
+          type: web
+          name: genassist-api
+          envVarKey: LOG_LEVEL
+
+  - type: web
+    name: genassist-ui
+    runtime: static
+    autoDeploy: true
+    buildCommand: npm --prefix frontend ci && npm --prefix frontend run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_UI_VERSION
+        value: "render"
+      - key: VITE_MULTI_TENANT_ENABLED
+        value: "false"
+      - key: VITE_WS
+        value: "true"
+      - key: VITE_GENASSIST_CHAT_APIKEY
+        value: "replace_me"
+      - key: VITE_ONBOARDING_CHAT_APIKEY
+        value: "replace_me"
+      - key: VITE_ONBOARDING_USERNAME
+        value: "admin"
+      - key: VITE_ONBOARDING_PASSWORD
+        value: "genadmin"
+      - key: VITE_PUBLIC_API_URL
+        sync: false
+      - key: VITE_WEBSOCKET_PUBLIC_URL
+        sync: false
+      - key: VITE_ONBOARDING_API_URL
+        sync: false
+
+databases:
+  - name: genassist-db
+    databaseName: core_db
+    user: postgres
+    postgresMajorVersion: "17"
+    ipAllowList: []

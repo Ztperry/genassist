@@ -56,7 +56,7 @@ cd genassist
 
 ## Docker Containers
 ### Prepare .env files
-Create a ./frontend/.env environment file based on ./frontend/.env.example
+Create a ./frontend/.env environment file based on ./frontend/.env.template
 Create a ./backend/.env environment file based on ./backend/.env.example
 
 ### Build containers from source
@@ -78,6 +78,23 @@ npm run status   # Show container status
 npm run stop     # Stop and remove the stack
 ```
 
+### Deploy to Render (Blueprint)
+This repository includes a `render.yaml` blueprint for a minimal web deployment.
+
+1. Push this repository to GitHub.
+2. In Render, create a new Blueprint service from the repo.
+3. During first deploy, fill the `sync: false` environment variables:
+   - `DB_HOST`: internal hostname from your Render Postgres instance
+   - `CORS_ALLOWED_ORIGINS`: your frontend URL (example: `https://genassist-ui.onrender.com`)
+   - `VITE_PUBLIC_API_URL`: your backend URL + `/api` (example: `https://genassist-api.onrender.com/api`)
+   - `VITE_WEBSOCKET_PUBLIC_URL`: your backend URL using `wss://` + `/api` (example: `wss://genassist-api.onrender.com/api`)
+   - `VITE_ONBOARDING_API_URL`: your backend base URL (example: `https://genassist-api.onrender.com/`)
+4. Deploy and verify:
+   - Frontend loads from the static service URL
+   - Backend health endpoint responds at `/api/playground/health`
+
+Note: this blueprint includes API, UI, Postgres, Redis, Celery worker, and Celery beat. The `worker` services are set to `starter` plan because Render does not support workers on free plan.
+
 ### Use container registry
 ```bash
 #RUN
@@ -93,7 +110,7 @@ docker compose -f docker-compose.yml -p genassist_local_01 down
 ```bash
 cd frontend
 ```
-Create a `.env` file in the root directory of frontend similar to .env.example:
+Create a `.env` file in the root directory of frontend similar to `.env.template`:
 Follow Readme.md for frontend project
 
 Access the frontend app at: http://localhost
