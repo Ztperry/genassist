@@ -230,6 +230,5 @@ services:
 databases:
   - name: genassist-db
     databaseName: core_db
-    user: postgres
     postgresMajorVersion: "17"
     ipAllowList: []
