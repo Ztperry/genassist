@@ -38,6 +38,7 @@ import { GmailOAuthCallback } from "./views/DataSources/components/GmailOAuthCal
 import { Office365OAuthCallback  } from "./views/DataSources/components/Office365OAuthCallback";
 import WebhookListPage from "@/views/Webhooks/pages/Webhooks";
 import MCPServersPage from "@/views/MCPServers/pages/MCPServers";
+import EmailAgentPage from "@/views/EmailAgent/Index";
 import Privacy from "@/views/Privacy";
 import ServerStatusBanner from "@/components/ServerStatusBanner";
 import Onboarding from "@/views/Onboarding/pages/Onboarding";
@@ -319,6 +320,14 @@ export const RoutesProvider = () => {
               element: (
                 <ProtectedRoute requiredPermissions={["read:mcp_server"]}>
                   <MCPServersPage />
+                </ProtectedRoute>
+              ),
+            },
+            {
+              path: "email-agent",
+              element: (
+                <ProtectedRoute requiredPermissions={["read:data_source"]}>
+                  <EmailAgentPage />
                 </ProtectedRoute>
               ),
             },

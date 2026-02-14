@@ -256,6 +256,7 @@ def create_celery():
             "app.tasks.share_folder_tasks",
             "app.tasks.ml_model_pipeline_tasks",
             "app.tasks.kb_batch_tasks",
+            "app.tasks.email_agent_tasks",
         ],
     )
 
@@ -352,6 +353,14 @@ def create_celery():
         "summarize-files-from-azure": {
             "task": "app.tasks.kb_batch_tasks.batch_process_files_kb",
             "schedule": 300.0,  # Every 5 minutes (300 seconds)
+        },
+        # Process email agent for Gmail data sources every 5 minutes
+        "process-email-agent": {
+            "task": "app.tasks.email_agent_tasks.process_email_agent_task",
+            "schedule": crontab(minute="*/5"),
+            "options": {
+                "expires": 300,  # Task expires after 5 minutes
+            },
         },
     }
 

@@ -14,6 +14,7 @@ import {
   UserRoundCog,
   Network,
   Waypoints,
+  Mail,
 } from "lucide-react";
 import {
   Sidebar,
@@ -136,6 +137,11 @@ const mainMenuItems: MenuItem[] = [
         title: "MCP Servers",
         url: "/mcp-servers",
         permissionsRequired: ["read:mcp_server"],
+      },
+      {
+        title: "Email Agent",
+        url: "/email-agent",
+        permissionsRequired: ["read:data_source"],
       },
       {
         title: "Configuration Vars",
