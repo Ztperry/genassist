@@ -50,7 +50,9 @@ services:
       - key: DB_PORT
         value: "5432"
       - key: DB_HOST
-        sync: false
+        fromDatabase:
+          name: genassist-db
+          property: host
       - key: REDIS_OVERRIDE_URL
         fromService:
           type: keyvalue
@@ -79,35 +81,31 @@ services:
           name: genassist-api
           envVarKey: JWT_SECRET_KEY
       - key: DB_NAME
-        fromService:
-          type: web
-          name: genassist-api
-          envVarKey: DB_NAME
+        fromDatabase:
+          name: genassist-db
+          property: database
       - key: DB_USER
-        fromService:
-          type: web
-          name: genassist-api
-          envVarKey: DB_USER
+        fromDatabase:
+          name: genassist-db
+          property: user
       - key: DB_PASS
-        fromService:
-          type: web
-          name: genassist-api
-          envVarKey: DB_PASS
+        fromDatabase:
+          name: genassist-db
+          property: password
       - key: DB_PORT
         fromService:
           type: web
           name: genassist-api
           envVarKey: DB_PORT
       - key: DB_HOST
-        fromService:
-          type: web
-          name: genassist-api
-          envVarKey: DB_HOST
+        fromDatabase:
+          name: genassist-db
+          property: host
       - key: REDIS_OVERRIDE_URL
         fromService:
-          type: web
-          name: genassist-api
-          envVarKey: REDIS_OVERRIDE_URL
+          type: keyvalue
+          name: genassist-redis
+          property: connectionString
       - key: REDIS_SSL
         fromService:
           type: web
@@ -149,35 +147,31 @@ services:
           name: genassist-api
           envVarKey: JWT_SECRET_KEY
       - key: DB_NAME
-        fromService:
-          type: web
-          name: genassist-api
-          envVarKey: DB_NAME
+        fromDatabase:
+          name: genassist-db
+          property: database
       - key: DB_USER
-        fromService:
-          type: web
-          name: genassist-api
-          envVarKey: DB_USER
+        fromDatabase:
+          name: genassist-db
+          property: user
       - key: DB_PASS
-        fromService:
-          type: web
-          name: genassist-api
-          envVarKey: DB_PASS
+        fromDatabase:
+          name: genassist-db
+          property: password
       - key: DB_PORT
         fromService:
           type: web
           name: genassist-api
           envVarKey: DB_PORT
       - key: DB_HOST
-        fromService:
-          type: web
-          name: genassist-api
-          envVarKey: DB_HOST
+        fromDatabase:
+          name: genassist-db
+          property: host
       - key: REDIS_OVERRIDE_URL
         fromService:
-          type: web
-          name: genassist-api
-          envVarKey: REDIS_OVERRIDE_URL
+          type: keyvalue
+          name: genassist-redis
+          property: connectionString
       - key: REDIS_SSL
         fromService:
           type: web

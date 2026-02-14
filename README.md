@@ -84,7 +84,6 @@ This repository includes a `render.yaml` blueprint for a minimal web deployment.
 1. Push this repository to GitHub.
 2. In Render, create a new Blueprint service from the repo.
 3. During first deploy, fill the `sync: false` environment variables:
-   - `DB_HOST`: internal hostname from your Render Postgres instance
    - `CORS_ALLOWED_ORIGINS`: your frontend URL (example: `https://genassist-ui.onrender.com`)
    - `VITE_PUBLIC_API_URL`: your backend URL + `/api` (example: `https://genassist-api.onrender.com/api`)
    - `VITE_WEBSOCKET_PUBLIC_URL`: your backend URL using `wss://` + `/api` (example: `wss://genassist-api.onrender.com/api`)
